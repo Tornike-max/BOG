@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bank</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navigation">
+      <a href="index.html"
+        ><img src="images/bog.png" alt="Logo" class="logo"
+      /></a>
+      <p class="welcome">Login to get started</p>
+      <form class="login">
+        <input
+          type="text"
+          placeholder="User"
+          class="login__input login__input--user"
+        />
+
+        <input
+          type="text"
+          placeholder="PIN"
+          maxlength="4"
+          class="login__input login__input--pin"
+        />
+        <button class="login__btn">&rarr;</button>
+      </form>
+    </nav>
+
+    <div class="app">
+      <div class="balance">
+        <div>
+          <p class="balance__label">Current Balance</p>
+          <p class="balance__date">
+            <span>05/05/2023</span>
+          </p>
+        </div>
+        <div>
+          <p class="balance__value">2500000€</p>
+        </div>
+      </div>
+
+      
+     <div class="section">
+
+      <div class="left">
+        <div class="movements__row">
+            <div class="movements__type 
+            movements__type--deposit">2 deposit</div>
+            <div class="movements__date"> 3 days ago</div>
+            <div class="movements__value">4 000€</div>
+        </div>
+        <div class="movements__row">
+            <div class="movements__type
+            movements__type--withdrawal">1 withdrawal</div>
+            <div class="movements__date">3 days ago</div>
+            <div class="movements__value">-378€</div>
+        </div>
+
+    </div>
+
+      <div class="right">
+        <div class="first">
+          <div class="transfer-div">
+          <h2 class="transfer">Transfer money</h2>
+        </div>
+      <div class="input-div">
+          <input
+          type="text"
+          placeholder=""
+          class="transfer-input"
+        />
+    
+        <input
+          type="text"
+          placeholder=""
+          class="transfer-input"
+        />
+      </div>
+
+        </div>
+
+        <div class="second"></div>
+        <div class="third"></div>
+      </div>
+
+    </div> 
+
+    <div class="summary">
+      <p class="in">In-</p>
+      <p class="summary__in">27 035,20:</p>
+      <p class="out">Out-</p>
+      <p class="summary__out">1082,61:</p>
+      <p class="interest">Interest-</p>
+      <p class="summary-interest">323,46:</p>
+      <button class="btn--sort">&downarrow; SORT</button>
+    </div>
+
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
