@@ -52,7 +52,7 @@ const displayMovements = function (movement) {
     `<div class="movements__row">
         <div class="movements__type 
         movements__type--${type}">${i + 1} ${type}</div>
-        <div class="movements__value">${mov}€</div>
+        <div class="movements__value">${mov}₾</div>
     </div>`;
      movements.insertAdjacentHTML('afterbegin', html)
   });
@@ -62,7 +62,7 @@ const displayMovements = function (movement) {
 
 const calcBallance = function(movements) {
    const balance = movements.reduce((accum,cur) => accum + cur)
-   balValue.textContent = `${balance} EUR`
+   balValue.textContent = `${balance} ₾`
 }
 
 
@@ -71,12 +71,12 @@ let calcSummary = function (movements){
   let income = movements
   .filter(mov => mov > 0)
   .reduce((accum,cur)=> accum + cur,0)
-  summaryIn.textContent =`${income}:`;
+  summaryIn.textContent =`${income}₾:`;
 
   const out = movements
   .filter(mov => mov < 0)
   .reduce((accum,cur) => accum + cur, 0)
-  summaryOut.textContent = `${Math.abs(out)}:`;
+  summaryOut.textContent = `${Math.abs(out)}₾:`;
 
   //try to do this part 
 }
@@ -110,8 +110,7 @@ btnLogin.addEventListener('click',function(e){
       curAccount.owner.split(' ')[0]
     }`;
     containerApp.classList.add('active');
-    inputLoginPin.textContent = '';
-    inputLoginUsername.textContent = '';
+    inputLoginUsername.value = inputLoginPin.value = '';
 
     calcSummary(curAccount.movements)
 
@@ -120,8 +119,9 @@ btnLogin.addEventListener('click',function(e){
     displayMovements(curAccount.movements);
   }
   
-
 })
+
+
 
 
 
