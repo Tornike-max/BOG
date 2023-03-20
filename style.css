@@ -213,7 +213,13 @@ main part */
 }
 
 .amount-input{
-    font-size:15px;
+    border: none;
+    padding: 0.2rem 0.5rem;
+    font-size: 20px;
+    text-align: center;
+    width: 100px;
+    border-radius: 20px;
+    margin:0 auto;
 }
 
 .btn-input{
@@ -246,20 +252,32 @@ main part */
     justify-content: flex-start;
 }
 
+.ama-input{
+    font-size:12px;
+}
+
 .second:hover{
     max-width:410px;
     transition:all 0.8s ;
 }
 
-.amount-input{
-    font-size:12px;
-}
 
 .trans-input{
     font-size:12px;
 }
 
+.request-header{
+    font-size:20px;
+    margin-top:20px;
+}
+
 .request-input{
+    border: none;
+    padding: 0.2rem 0.5rem;
+    font-size: 20px;
+    text-align: center;
+    width: 100px;
+    border-radius: 20px;
     margin:0 auto;
 }
 
@@ -290,9 +308,9 @@ main part */
 }
 
 .inp-div{
-    max-width:100px;
-    width:100%;
-    height:50px;
+    max-width: 100px;
+    width: 100%;
+    height: 88px;
 }
 
 .btn-req-div{
@@ -317,11 +335,42 @@ main part */
     justify-content: flex-start;
 }
 
+.close-input{
+    border: none;
+    padding: 0.2rem 0.5rem;
+    font-size: 20px;
+    text-align: center;
+    width: 100px;
+    border-radius: 20px;
+    margin:0 auto;
+}
+
+.close-pin{
+    border: none;
+    padding: 0.2rem 0.5rem;
+    font-size: 20px;
+    text-align: center;
+    width: 100px;
+    border-radius: 20px;
+    margin:0 auto;
+}
+
+.btn-close{
+    max-width: 54px;
+    width: 100%;
+    height: 30px;
+    border-radius: 30px;
+    border: none;
+}
+
+.btn-close:hover{background-color:orange;
+   cursor: pointer;
+}
+
 .third:hover{
     max-width:410px;
     transition:all 0.8s ;
 }
-
 
 .in{
     font-size:25px;

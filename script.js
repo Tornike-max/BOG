@@ -30,9 +30,17 @@ const containerApp = document.querySelector(".app");
 const movements = document.querySelector(".left");
 
 const btnLogin = document.querySelector(".login__btn");
+const transferBtn = document.querySelector(".btn-input");
+const btnClose = document.querySelector(".btn-close");
+const btnLoan = document.querySelector('.btn-request');
 
 const inputLoginUsername = document.querySelector(".login__input--user");
 const inputLoginPin = document.querySelector(".login__input--pin");
+const transferTo = document.querySelector('.transfer-input');
+const transferAmount = document.querySelector('.amount-input')
+const closeInput = document.querySelector('.close-input');
+const closePin = document.querySelector('.close-pin');
+const loanInput = document.querySelector('.request-input')
 
 const balValue = document.querySelector('.balance__value');
 
@@ -40,8 +48,6 @@ const summaryIn = document.querySelector('.summary__in');
 const summaryOut = document.querySelector('.summary__out');
 const summaryInt = document.querySelector('.summary-interest');
 
-
-containerApp.classList.remove('hidden')
 
 const displayMovements = function (movement) {
     movements.innerHTML = ''
@@ -58,27 +64,40 @@ const displayMovements = function (movement) {
   });
 };
 
+const updateUi = function (acc){
+    calcSummary(acc)
 
+    calcBallance(acc)
 
-const calcBallance = function(movements) {
-   const balance = movements.reduce((accum,cur) => accum + cur)
-   balValue.textContent = `${balance} ₾`
+    displayMovements(acc.movements);
 }
 
 
 
-let calcSummary = function (movements){
-  let income = movements
-  .filter(mov => mov > 0)
-  .reduce((accum,cur)=> accum + cur,0)
-  summaryIn.textContent =`${income}₾:`;
+const calcBallance = function(acc) {
+   acc.balance = acc.movements.reduce((accum,cur) => accum + cur)
+   balValue.textContent = `${acc.balance} ₾`;
+   console.log(acc)
+}
 
-  const out = movements
+
+
+let calcSummary = function (acc){
+  acc.income = acc.movements
+    .filter(mov => mov > 0)
+    .reduce((accum,cur) => accum + cur,0)
+    summaryIn.textContent = `${acc.income}₾`;
+
+  acc.out = acc.movements
   .filter(mov => mov < 0)
-  .reduce((accum,cur) => accum + cur, 0)
-  summaryOut.textContent = `${Math.abs(out)}₾:`;
+  .reduce((accum,cur) => accum + cur,0)
+  summaryOut.textContent = `${Math.abs(acc.out)}₾`;
 
-  //try to do this part 
+  acc.interest = acc.movements
+  .filter(mov=> mov > 0)
+  .map(mov => (mov * 1.2) / 100)
+  .reduce((accum,cur) => accum + cur)
+  summaryInt.textContent = `${acc.interest}₾`
 }
 
 
@@ -100,26 +119,75 @@ let curAccount ;
 
 btnLogin.addEventListener('click',function(e){
   e.preventDefault();
-  curAccount = accounts.find(acc => 
-    acc.userName === inputLoginUsername.value
-  );
+  curAccount = accounts.find(acc => acc.userName === inputLoginUsername.value)
   console.log(curAccount)
 
-  if(curAccount?.pin === Number(inputLoginPin.value)){
-    labelWelcome.textContent = `welcome back ${
-      curAccount.owner.split(' ')[0]
-    }`;
+  if(curAccount.pin === Number(inputLoginPin.value)){
+     
     containerApp.classList.add('active');
-    inputLoginUsername.value = inputLoginPin.value = '';
+    labelWelcome.textContent = `Welcome back ${
+      curAccount.owner.split(' ')[0]}`
 
-    calcSummary(curAccount.movements)
-
-    calcBallance(curAccount.movements)
-
-    displayMovements(curAccount.movements);
+    
+      updateUi(curAccount)
   }
   
+});
+
+
+transferBtn.addEventListener('click', function(e){
+  e.preventDefault();
+  let amount = Number(transferAmount.value)
+  let receiverAcc = accounts.find(acc => 
+    acc.userName === transferTo.value
+  )
+
+  if(amount > 0 && receiverAcc && curAccount.balance > amount
+    && receiverAcc?.userName !== curAccount.userName){
+    
+      curAccount.movements.push(-amount);
+      receiverAcc.movements.push(amount)
+      
+      updateUi(curAccount)
+
+  }
+  console.log(amount,receiverAcc)
 })
+
+btnClose.addEventListener('click', function(e){
+  e.preventDefault();
+
+  const index = accounts.findIndex(acc => acc.userName === curAccount.userName)
+  if(closeInput.value === curAccount.userName && Number(closePin.value) === curAccount.pin){
+    accounts.splice(index,1)
+    console.log(index)
+  }
+})
+
+btnLoan.addEventListener('click',function(e){
+  e.preventDefault();
+
+  let amount = Number(loanInput.value);
+  if(amount > 0 && curAccount.movements.some(mov => mov >= amount * 0.1)){
+      curAccount.movements.push(amount)
+      updateUi(curAccount)
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
