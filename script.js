@@ -3,7 +3,7 @@
 const account1 = {
   owner: "Tornike Ozbetelashvili",
   movements: [200, 1120, 980, 120, -400, 1543, -190, -200],
-  interestsRate: 2.0,
+  interestsRate: 1.2,
   pin: 1111,
 };
 
@@ -73,13 +73,11 @@ const updateUi = function (acc){
 }
 
 
-
 const calcBallance = function(acc) {
    acc.balance = acc.movements.reduce((accum,cur) => accum + cur)
    balValue.textContent = `${acc.balance} ₾`;
    console.log(acc)
 }
-
 
 
 let calcSummary = function (acc){
@@ -95,7 +93,7 @@ let calcSummary = function (acc){
 
   acc.interest = acc.movements
   .filter(mov=> mov > 0)
-  .map(mov => (mov * 1.2) / 100)
+  .map(mov => (mov * acc.interestsRate) / 100)
   .reduce((accum,cur) => accum + cur)
   summaryInt.textContent = `${acc.interest}₾`
 }
@@ -127,6 +125,7 @@ btnLogin.addEventListener('click',function(e){
     containerApp.classList.add('active');
     labelWelcome.textContent = `Welcome back ${
       curAccount.owner.split(' ')[0]}`
+      
 
     
       updateUi(curAccount)
@@ -137,19 +136,15 @@ btnLogin.addEventListener('click',function(e){
 
 transferBtn.addEventListener('click', function(e){
   e.preventDefault();
-  let amount = Number(transferAmount.value)
-  let receiverAcc = accounts.find(acc => 
-    acc.userName === transferTo.value
-  )
+ 
+  let amount = Number(transferAmount.value);
+  let receiverAcc = accounts.find(cur => cur.userName === transferTo.value);
 
-  if(amount > 0 && receiverAcc && curAccount.balance > amount
-    && receiverAcc?.userName !== curAccount.userName){
-    
-      curAccount.movements.push(-amount);
-      receiverAcc.movements.push(amount)
-      
-      updateUi(curAccount)
+  if(amount > 0 && receiverAcc && curAccount.balance > amount && receiverAcc?.userName !== curAccount.userName){
+    curAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
 
+    updateUi(curAccount)
   }
   console.log(amount,receiverAcc)
 })
@@ -161,6 +156,9 @@ btnClose.addEventListener('click', function(e){
   if(closeInput.value === curAccount.userName && Number(closePin.value) === curAccount.pin){
     accounts.splice(index,1)
     console.log(index)
+    containerApp.classList.remove('active')
+    labelWelcome.textContent = `Account deleted`
+    closeInput.value = closePin.value = '';
   }
 })
 
@@ -173,6 +171,8 @@ btnLoan.addEventListener('click',function(e){
       updateUi(curAccount)
   }
 })
+
+
 
 
 
