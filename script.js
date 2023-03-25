@@ -26,6 +26,7 @@ const accounts = [account1, account2, account3];
 const labelWelcome = document.querySelector(".welcome");
 const labelDate = document.querySelector(".date");
 const labelBalance = document.querySelector(".balance__value");
+const date = document.querySelector(".balance__date")
 const containerApp = document.querySelector(".app");
 const movements = document.querySelector(".left");
 
@@ -171,6 +172,13 @@ btnLoan.addEventListener('click',function(e){
       updateUi(curAccount)
   }
 })
+
+const realDate = function(){
+   const currentTime = Date.now()
+   let currentDate = new Date(currentTime)
+   date.textContent = currentDate;
+}
+realDate()
 
 
 
