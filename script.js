@@ -5,6 +5,16 @@ const account1 = {
   movements: [200, 1120, 980, 120, -400, 1543, -190, -200],
   interestsRate: 1.2,
   pin: 1111,
+  movementsDate: [
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+  ]
 };
 
 const account2 = {
@@ -12,6 +22,16 @@ const account2 = {
   movements: [10, 320, -280, 5320, 100, -543, 290, -100],
   interestsRate: 0.9,
   pin: 2222,
+  movementsDate: [
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+  ]
 };
 
 const account3 = {
@@ -19,6 +39,16 @@ const account3 = {
   movements: [300, 120, -280, 420, 2410, -843, 990, -100],
   interestsRate: 1.0,
   pin: 3333,
+  movementsDate: [
+    "2020-05-12T23:50:21.817Z",
+    "2021-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+    "2020-05-12T23:50:21.817Z",
+  ]
 };
 
 const accounts = [account1, account2, account3];
@@ -29,6 +59,7 @@ const labelBalance = document.querySelector(".balance__value");
 const date = document.querySelector(".balance__date")
 const containerApp = document.querySelector(".app");
 const movements = document.querySelector(".left");
+const movDate = document.querySelector(".movements__date")
 
 const btnLogin = document.querySelector(".login__btn");
 const transferBtn = document.querySelector(".btn-input");
@@ -50,16 +81,26 @@ const summaryOut = document.querySelector('.summary__out');
 const summaryInt = document.querySelector('.summary-interest');
 
 
-const displayMovements = function (movement) {
-    movements.innerHTML = ''
-     movement.forEach(function (mov, i) {
+const displayMovements = function (acc,sort = false) {
+    movements.innerHTML = '';
+
+    let movs = sort ? acc.movements.slice().sort((a,b) => a-b) : acc.movements;
+
+    movs.forEach(function (mov, i) {
     const type = mov < 0 ? 'withdrawal' : 'deposit';
+
+    const displayTime = new Date(acc.movementsDate[i]);
+    let year = displayTime.getFullYear();
+    let month = `${displayTime.getMonth() + 1}`.padStart(2,0);
+    let day = `${displayTime.getDate()}`.padEnd(2,0);
+    const displayDate = movDate.textContent =`${month}/${year}/${day}`
 
     const html = 
     `<div class="movements__row">
         <div class="movements__type 
         movements__type--${type}">${i + 1} ${type}</div>
-        <div class="movements__value">${mov}₾</div>
+        <div class="movements__date">${displayDate}</div>
+        <div class="movements__value">${Math.abs(mov)}₾</div>
     </div>`;
      movements.insertAdjacentHTML('afterbegin', html)
   });
@@ -70,7 +111,7 @@ const updateUi = function (acc){
 
     calcBallance(acc)
 
-    displayMovements(acc.movements);
+    displayMovements(acc);
 }
 
 
@@ -85,18 +126,18 @@ let calcSummary = function (acc){
   acc.income = acc.movements
     .filter(mov => mov > 0)
     .reduce((accum,cur) => accum + cur,0)
-    summaryIn.textContent = `${acc.income}₾`;
+    summaryIn.textContent = `${Math.round(acc.income)}₾`;
 
   acc.out = acc.movements
   .filter(mov => mov < 0)
   .reduce((accum,cur) => accum + cur,0)
-  summaryOut.textContent = `${Math.abs(acc.out)}₾`;
+  summaryOut.textContent = `${Math.abs(Math.round(acc.out))}₾`;
 
   acc.interest = acc.movements
   .filter(mov=> mov > 0)
   .map(mov => (mov * acc.interestsRate) / 100)
   .reduce((accum,cur) => accum + cur)
-  summaryInt.textContent = `${acc.interest}₾`
+  summaryInt.textContent = `${Math.round(acc.interest)}₾`
 }
 
 
@@ -145,6 +186,8 @@ transferBtn.addEventListener('click', function(e){
     curAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    curAccount.movementsDate.push(new Date());
+    receiverAcc.movementsDate.push(new Date())
     updateUi(curAccount)
   }
   console.log(amount,receiverAcc)
@@ -169,21 +212,31 @@ btnLoan.addEventListener('click',function(e){
   let amount = Number(loanInput.value);
   if(amount > 0 && curAccount.movements.some(mov => mov >= amount * 0.1)){
       curAccount.movements.push(amount)
+      curAccount.movementsDate.push(new Date())
       updateUi(curAccount)
   }
 })
 
-const realDate = function(){
-   const currentTime = Date.now()
-   let currentDate = new Date(currentTime)
-   date.textContent = currentDate;
-}
-realDate()
+const currentTime = new Date()
+let year = currentTime.getFullYear();
+let month = `${currentTime.getMonth() + 1}`.padStart(2,0);
+let day = `${currentTime.getDate()}`.padEnd(2,0);;
+let hour = currentTime.getHours();
+let minute = `${currentTime.getMinutes()}`.padEnd(2,0);
+date.textContent = `${month}/${day}/${year}, ${hour}:${minute}`
 
 
-
-
-
+labelBalance.addEventListener('click', function (){
+  [...document.querySelectorAll('.movements__row')]
+  .forEach(function(row,i){
+    if(i % 2 === 0){
+      row.style.backgroundColor = 'orange'
+    }
+    if(i % 3 === 0){
+      row.style.backgroundColor = 'yellow'
+    }
+  })
+})
 
 
 
