@@ -159,20 +159,28 @@ login(accounts)
 console.log(accounts)
 
 let logOut = function(){
-  let time = 300
-  setInterval(function(){
+  let tick = function(){
     let min = String(Math.trunc(time / 60)).padStart(2,0);
     let sec = String(Math.trunc(time % 60)).padStart(2,0);
     setTime.textContent = `${min}:${sec}`;
-    time = time - 1;
+    
     if(time === 0){
       containerApp.classList.remove('active');
+      labelWelcome.textContent = 'Login to get started'
       clearInterval(time)
+
     }
-  },1000)
+    time = time - 1;
+  }
+
+
+  let time = 20
+  tick()
+  const timer = setInterval(tick,1000)
+  return timer
 }
 
-let curAccount ;
+let curAccount, timer;
 
 btnLogin.addEventListener('click',function(e){
   e.preventDefault();
@@ -186,8 +194,8 @@ btnLogin.addEventListener('click',function(e){
     labelWelcome.textContent = `Welcome back ${
       curAccount.owner.split(' ')[0]}`
       
-
-      logOut()
+      if(timer) clearInterval(timer);
+      timer = logOut()
       updateUi(curAccount)
   }
   
@@ -210,6 +218,9 @@ transferBtn.addEventListener('click', function(e){
     curAccount.movementsDate.push(new Date());
     receiverAcc.movementsDate.push(new Date())
     updateUi(curAccount)
+
+    clearInterval(timer);
+    timer = logOut()
   },1000)
   }
   console.log(amount,receiverAcc)
@@ -241,6 +252,9 @@ btnLoan.addEventListener('click',function(e){
       curAccount.movements.push(amount)
       curAccount.movementsDate.push(new Date())
       updateUi(curAccount)
+
+      clearInterval(timer);
+      timer = logOut()
     },2000)
   }
 })
@@ -268,68 +282,4 @@ labelBalance.addEventListener('click', function (){
     }
   })
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let account = accounts.find(name => name.owner === 'levani Ozbetelashvili');
-// console.log(account)
-
-// for(let name of accounts){
-//   let own = name.owner === 'levani Ozbetelashvili';
-//   console.log(own)
-// }
-
-
-
-
-
-// const login = function(user,pin){
-// document.querySelector('.login__input--user').textContent = user
-// document.querySelector('.login__input--user').textContent = pin
-
-// btnLogin.addEventListener('click', function(e){
-//   e.preventDefault()
-//     let [first, second] = user.split('').map(item => item.charAt(0).toLowerCase())
-//     let changedString = [first.concat(second)].join('');
-//     if(changedString === 'to' && pin === 1111){
-//         console.log('login')
-//         containerApp.classList.add('active')
-//     }else{
-//         console.log('invalid pass')
-//     }
-// })
-// }
-// login(account1.owner,account1.pin)
-
-
-// let deposits = account1.movements.filter(function(mov){
-//    return mov > 0
-// })
-// console.log(deposits)
-
-
-// let withdrawal = account1.movements.filter(draw => draw < 0)
-// console.log(withdrawal)
-
-// //accumulator is like a snowBall ყოველ ჯერზე ემატება ერთმანეთს
-// let balance = account1.movements.reduce((accumulator, cur) => accumulator + cur)
-// console.log(balance)
-
-
 
