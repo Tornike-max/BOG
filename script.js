@@ -1,5 +1,6 @@
 "use strict";
 
+
 const account1 = {
   owner: "Tornike Ozbetelashvili",
   movements: [200, 1120, 980, 23120, -400, 1543, -190, -200],
@@ -155,21 +156,28 @@ let logIn = function (accs) {
 logIn(accounts);
 
 let logOutTimer = function (){
-  let time = 200;
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2,0)
+    const sec = String(time % 60).padStart(2,0)
 
-  setInterval(function () {
-    setTime.textContent = time;
-    time--;
+    setTime.textContent = `${min}:${sec}`;
 
     if(time === 0){
-      labelWelcome.textContent = 'Sign in to get started';
-      containerApp.classList.remove('active')
+      clearInterval(timer)
+      containerApp.classList.remove('active');
+      labelWelcome.textContent = 'Log in to get started';
     }
+    time--
+  }
 
-  },1000)
+  let time = 120;
+
+  tick()
+  const timer = setInterval(tick,1000)
+  return timer
 }
 
-let currentAccount;
+let currentAccount, timer;
 
 btnLogin.addEventListener("click", function (e) {
   e.preventDefault();
@@ -201,7 +209,8 @@ btnLogin.addEventListener("click", function (e) {
     console.log(currentAccount);
 
     inputLoginUsername.value = inputLoginPin.value = "";
-
+    if(timer) clearTimeout(timer);
+    timer = logOutTimer()
     updateUi(currentAccount);
   }, 1000);
 });
@@ -232,6 +241,10 @@ transferBtn.addEventListener("click", function (e) {
       receiverAcc.movementsDate.push(new Date().toISOString());
     }
     console.log(amount, receiverAcc);
+    
+    clearInterval(timer);
+    timer = logOutTimer()
+
     updateUi(currentAccount);
   }, 1000);
 });
@@ -284,11 +297,17 @@ btnLoan.addEventListener("click", function (e) {
       console.log("loan", amount,currentAccount);
     }
 
+    clearInterval(timer);
+    timer = logOutTimer()
     updateUi(currentAccount);
   }, 2000);
 });
 
 
+
+
+
+//old project
 
 // let arr = [1,2,3,4,5,[6,[7],8],9,10,[11,12]];
 // console.log(arr.flatMap(arr=> arr > 5))
@@ -304,58 +323,58 @@ btnLoan.addEventListener("click", function (e) {
 // const dice = Array.from({length: 70}, (cur,i) => Math.trunc(Math.random(i) * 70 ) + 1 )
 // console.log(dice)
 
-let bankBalance = accounts
-  .flatMap((movs) => movs.movements)
-  .filter((cur) => cur > 0)
-  .reduce((accum, cur) => accum + cur, 0);
-console.log(bankBalance);
+// let bankBalance = accounts
+//   .flatMap((movs) => movs.movements)
+//   .filter((cur) => cur > 0)
+//   .reduce((accum, cur) => accum + cur, 0);
+// console.log(bankBalance);
 
-// let greaterThan1000 = accounts.flatMap(movs=> movs.movements)
-// .filter(mov=> mov > 1000).length
-// console.log(greaterThan1000)
+// // let greaterThan1000 = accounts.flatMap(movs=> movs.movements)
+// // .filter(mov=> mov > 1000).length
+// // console.log(greaterThan1000)
 
-let greaterThan1000 = accounts
-  .flatMap((movs) => movs.movements)
-  .reduce((accum, cur) => (cur > 1000 ? accum + 1 : accum), 0);
-console.log(greaterThan1000);
+// let greaterThan1000 = accounts
+//   .flatMap((movs) => movs.movements)
+//   .reduce((accum, cur) => (cur > 1000 ? accum + 1 : accum), 0);
+// console.log(greaterThan1000);
 
-let { deposits, withdrawals } = accounts
-  .flatMap((acc) => acc.movements)
-  .reduce(
-    (accum, cur) => {
-      cur > 0 ? (accum.deposits += cur) : (accum.withdrawals += cur);
-      return accum;
-    },
-    { deposits: 0, withdrawals: 0 }
-  );
-console.log(deposits, withdrawals);
+// let { deposits, withdrawals } = accounts
+//   .flatMap((acc) => acc.movements)
+//   .reduce(
+//     (accum, cur) => {
+//       cur > 0 ? (accum.deposits += cur) : (accum.withdrawals += cur);
+//       return accum;
+//     },
+//     { deposits: 0, withdrawals: 0 }
+//   );
+// console.log(deposits, withdrawals);
 
-const future = new Date(2037, 10, 19, 15, 23)
-console.log(+future)
-const calcDaysPassed = (date1,date2) => Math.round(date2 - date1) / (1000 * 60 * 60 * 24)
+// const future = new Date(2037, 10, 19, 15, 23)
+// console.log(+future)
+// const calcDaysPassed = (date1,date2) => Math.round(date2 - date1) / (1000 * 60 * 60 * 24)
 
-let day1  = calcDaysPassed(new Date(2037, 3, 28), new Date(2037, 3, 18))
-console.log(day1)
+// let day1  = calcDaysPassed(new Date(2037, 3, 28), new Date(2037, 3, 18))
+// console.log(day1)
 
 
 
-const cur = 6374689;
-let options = {
-  style: 'unit',
-  unit: 'mile-per-hour'
-}
-let result = {
-  style: 'currency',
-  currency: 'USD',
-}
-///Intl.NumberFormat('en-GB', options).format(cur)- ეს არის სინტაქსი. ამ კონკრეტულ შემთხვევაში როგრო აღინიშნება მოცემულ ქვეყნებში რიცხვები და mph.
-console.log('GREAT BRITAIN',Intl.NumberFormat('en-GB',options).format(cur));
-console.log(Intl.NumberFormat('ar-SY',options).format(cur));
-console.log(Intl.NumberFormat('en-GB',result).format(cur))
-console.log(Intl.NumberFormat('ja-JP',{ style: 'currency', currency: 'JPY' }).format(cur))
+// const cur = 6374689;
+// let options = {
+//   style: 'unit',
+//   unit: 'mile-per-hour'
+// }
+// let result = {
+//   style: 'currency',
+//   currency: 'USD',
+// }
+// ///Intl.NumberFormat('en-GB', options).format(cur)- ეს არის სინტაქსი. ამ კონკრეტულ შემთხვევაში როგრო აღინიშნება მოცემულ ქვეყნებში რიცხვები და mph.
+// console.log('GREAT BRITAIN',Intl.NumberFormat('en-GB',options).format(cur));
+// console.log(Intl.NumberFormat('ar-SY',options).format(cur));
+// console.log(Intl.NumberFormat('en-GB',result).format(cur))
+// console.log(Intl.NumberFormat('ja-JP',{ style: 'currency', currency: 'JPY' }).format(cur))
 
-//Intl.dateTimeFormat(იგივე სინტაქსი)
-console.log(Intl.DateTimeFormat('en-GB').format(cur))
+// //Intl.dateTimeFormat(იგივე სინტაქსი)
+// console.log(Intl.DateTimeFormat('en-GB').format(cur))
 
 
 
